@@ -1,13 +1,8 @@
 export default appString = {
-    dsLogo: "Please eneter user name",
-    isLoggedIn: false,
-  
-    //screen names
-    screen_splash :"app_splash",
-    screen_home :"app_home",
-    screen_login :"app_login",
-    screen_forgotpassword :"app_forgotpassword",
-    screen_signup :"app_signup",
+      //screen names
+    screen_login :"Login",
+    screen_forgotpassword :"Forgot Password",
+    screen_signup :"SignUp",
   
     //Login Strings
     error_email: "Please enter email address",
@@ -19,7 +14,6 @@ export default appString = {
 
     str_forgotpassword: "Forgot password?",
     str_signup: "Sign Up"
-
   
   };
   

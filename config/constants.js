@@ -1,6 +1,6 @@
 
 const constants = {
-   name: "Day Planner",
+   name: "FoodApp",
    isLoggedIn: false
 
 }

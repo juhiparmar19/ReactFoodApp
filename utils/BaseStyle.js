@@ -19,9 +19,15 @@ const baseStyles = StyleSheet.create({
     flexDirection: 'row'
   },
   buttonStyle: {
-    flexDirection: 'row',
-    flex: 1,
-    fontSize: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 15,
+    fontWeight:"bold",
+    borderColor: 'gray',
+    backgroundColor: colors.blueShade1,
+    borderWidth: 1,
+    borderRadius: 5,
+   padding:10
   },
   input: {
     height: 45,
@@ -33,6 +39,7 @@ const baseStyles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     backgroundColor: '#FFFFFF',
+    width:"80%"
   },
   image: {
     width: 100,
@@ -81,6 +88,7 @@ const baseStyles = StyleSheet.create({
     width: "62%",
     margin: dimen.marginTiny,
     alignItems: 'center',
+
   },
   buttonstyle: {
     width:'100%',

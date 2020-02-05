@@ -5,58 +5,49 @@ import {
     View
   } from 'react-native'
   import {
-    StackNavigator,
-    TabNavigator
-  } from 'react-navigation'
-  import {Login} from '../FoodApp/components/LoginComponent'
-  import {Home} from '../FoodApp/components/HomeComponent'
-  import {Splash} from '../FoodApp/components/SplashComponent'
+    createStackNavigator,
+  } from 'react-navigation-stack';
+  import {createAppContainer} from 'react-navigation';
+  import React, { Component } from "react";
 
-const AuthStack = StackNavigator(
+  import Login from '../FoodApp/components/LoginComponent';
+  import Home from '../FoodApp/components/HomeComponent';
+
+const AuthStack = createStackNavigator(
     {
-      Splash: {
-        screen: Splash
-      },
-      Login: {
+       Login: {
         screen: Login
-      },
-     
+      },  
+    },
+   { initialRouteName:'Login'}
+  )
+
+
+  const HomeStack = createStackNavigator(
+    {
+      Home:{
+        screen:Home
+      }
     }
   )
   
-//   const ModalStack = DismissableStackNavigator(
-//     {
-//       ModalStackScreen: {
-//         screen: ModalStackScreen
-//       }
-//     },
-//     {
-//       headerMode: 'none'
-//     }
-//   )
-  
-  const RootStack = StackNavigator(
+  const RootStack = createStackNavigator(
     {
-      Main: {
+      Auth: {
         screen: AuthStack,
+      },
+      Main:{
+        screen:HomeStack
       }
-    //   ModalScreen: {
-    //     screen: ModalScreen,
-    //   },
-    //   ModalStack: {
-    //     screen: ModalStack
-    //   }
+      
+      
+
     },
     {
       mode: 'modal',
       headerMode: 'none'
     }
   )
-
-  class App extends React.Component {
-    render () {
-      return <RootStack />
-    }
-  }
+  const AppNavigator = createAppContainer(RootStack);
+  export default AppNavigator;
   
-  AppRegistry.registerComponent('FoodApp', () => App)
