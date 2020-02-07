@@ -16,18 +16,23 @@ const baseStyles = StyleSheet.create({
     flexDirection: 'column'
   },
   horizontalView: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:'center',
+
   },
   buttonStyle: {
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 15,
+    textAlign:'center',
+    fontSize: 18,
     fontWeight:"bold",
     borderColor: 'gray',
-    backgroundColor: colors.blueShade1,
+    backgroundColor: colors.buttonBg,
     borderWidth: 1,
     borderRadius: 5,
-   padding:10
+    width:"80%",
+    padding:10
   },
   input: {
     height: 45,
@@ -35,7 +40,7 @@ const baseStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 20,
-    fontSize: 20,
+    fontSize: 18,
     paddingLeft: 5,
     paddingRight: 5,
     backgroundColor: '#FFFFFF',
@@ -85,7 +90,7 @@ const baseStyles = StyleSheet.create({
     borderColor: "gray"
   },
   inputContainer: {
-    width: "62%",
+    width: "80%",
     margin: dimen.marginTiny,
     alignItems: 'center',
 

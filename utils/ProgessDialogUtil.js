@@ -1,13 +1,11 @@
 import React from 'react';
 import { Modal, View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 
-const ProgressDialog = ({ visible }) => (
+const ProgressDialog = ({ isLoading }) => (
   <Modal
-    visible={visible}
-  >
+    visible={isLoading}>
     <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Please Wait</Text>
+      
         <View style={styles.loading}>
           <View style={styles.loader}>
             <ActivityIndicator size="large" />
@@ -17,7 +15,6 @@ const ProgressDialog = ({ visible }) => (
           </View> 
         </View>
       </View>
-    </View>
   </Modal>
 );
 
@@ -30,7 +27,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 35,
-    backgroundColor: 'white'
+    backgroundColor: '#00000000'
   },
   title: {
     fontSize: 18,
