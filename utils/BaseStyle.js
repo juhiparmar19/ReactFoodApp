@@ -111,6 +111,19 @@ const baseStyles = StyleSheet.create({
     flex: 1,
     minHeight: 40,
   },
+  buttonDisableStyle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign:'center',
+    fontSize: 18,
+    fontWeight:"bold",
+    borderColor: 'gray',
+    backgroundColor: colors.buttonDisableBg,
+    borderWidth: 1,
+    borderRadius: 5,
+    width:"80%",
+    padding:10
+  },
 })
 
 export default baseStyles;

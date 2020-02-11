@@ -6,7 +6,8 @@ const colors = {
   colorPrimary: "#1E7B8B",
   colorPrimaryDark: "#ff21648c",
 
-  buttonBg: "#FFB233",
+  buttonBg: "#3363ff",
+  buttonDisableBg: "#3369ff",
 
   blueShade1:"#EDF3FE",
   blueShade2:"#9FBFFA",

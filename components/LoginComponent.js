@@ -1,138 +1,122 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TextInput, SafeAreaView, Image, Alert } from 'react-native';
-import Constants from '../config/constants'
+import { Text, TextInput, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native';
 import BaseStyle from '../utils/BaseStyle'
 import validationInput from '../utils/validation'
-import { TouchableOpacity } from "react-native-gesture-handler";
-import ProgressDialog from '../utils/ProgessDialogUtil';
 import ApiManager from '../ApiService/ApiManager';
 import constants from "../config/constants";
 import AsyncStorage from '@react-native-community/async-storage'
 import LoadingComponent from "./LoadingComponent";
+import { StackActions, NavigationActions } from 'react-navigation'
 
 export default class LoginComponent extends Component {
   constructor(props) {
     super(props);
-    if (Constants.isLoggedIn) {
-      this.props.navigation.navigate('Home')
-    } else {
-      this.state = {
-        profile: "",
-        isProgress: false,
-        controls: {
-          email: {
-            value: "jm1@example.com",
-            valid: false,
-            validationRules: {
-              isEmail: true
-            },
-            touched: false
+    const token = AsyncStorage.getItem('accesstoken');
+
+    this.state = {
+      profile: "",
+      isProgress: false,
+      controls: {
+        email: {
+          value: "jm1@example.com",
+          valid: false,
+          validationRules: {
+            isEmail: true
           },
-          password: {
-            value: "jay@123",
-            valid: false,
-            validationRules: {
-              minLength: 6
-            },
-            touched: false
-          },
+          touched: false
         },
-
-      }
+        password: {
+          value: "jay@123",
+          valid: false,
+          validationRules: {
+            minLength: 6
+          },
+          touched: false
+        },
+      },
     }
-
-
 
   }
   render() {
     return (
-          //  <KeyboardAvoidingView style={BaseStyle.container} behavior="padding">
-      
 
-        <SafeAreaView style={BaseStyle.container}>
-           <LoadingComponent isLoading={this.state.isProgress} />
-          <Image
-            style={BaseStyle.image}
-            source={{ uri: 'https://facebook.github.io/react-native/img/tiny_logo.png' }}
-          />
-          <TextInput style={BaseStyle.input}
-            onChangeText={val => this.validateUserInput("email", val)}
-            value={this.state.controls.email.value}
-            touched={this.state.controls.email.touched}
-            autoCorrect={false}
-            placeholder='Email'
-            keyboardType='email-address'
-          ></TextInput>
-          <TextInput style={BaseStyle.input}
-            onChangeText={val => this.validateUserInput("password", val)}
-            value={this.state.controls.password.value}
-            touched={this.state.controls.password.touched}
-            secureTextEntry={true}
-            placeholder='Password'
-          >
 
-          </TextInput>
+      <SafeAreaView style={BaseStyle.container}>
+        <LoadingComponent isLoading={this.state.isProgress} />
+        <Image
+          style={BaseStyle.image}
+          source={{ uri: 'https://facebook.github.io/react-native/img/tiny_logo.png' }}
+        />
+        <TextInput style={BaseStyle.input}
+          onChangeText={val => this.validateUserInput("email", val)}
+          value={this.state.controls.email.value}
+          touched={this.state.controls.email.touched}
+          autoCorrect={false}
+          placeholder='Email'
+          keyboardType='email-address'
+        ></TextInput>
+        <TextInput style={BaseStyle.input}
+          onChangeText={val => this.validateUserInput("password", val)}
+          value={this.state.controls.password.value}
+          touched={this.state.controls.password.touched}
+          secureTextEntry={true}
+          placeholder='Password' ></TextInput>
+        <TouchableOpacity
+          style={BaseStyle.horizontalView}
+          activeOpacity ={0.5}
+          onPress={this.onLogin}
+          disabled={
+            !this.state.controls.email.valid ||
+            !this.state.controls.password.valid
+          } >
+          <Text
 
-          <TouchableOpacity
-            style={BaseStyle.horizontalView}
-            onPress={this.onLogin}
-            disabled={
-              !this.state.controls.email.valid ||
-              !this.state.controls.password.valid
+            style={
+              (!this.state.controls.email.valid || !this.state.controls.password.valid)
+                ? { ...BaseStyle.buttonStyle, ...BaseStyle.buttonDisableStyle }
+                : BaseStyle.buttonStyle
             }
-          >
-            <Text style={BaseStyle.buttonStyle}>Login</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
+          >Login</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
 
-      // </KeyboardAvoidingView>
     );
   }
-  onLogin = () => {
-   
-    this.setState({isProgress: true})
-    //Note:- Provide valid URL
-    fetch('http://35.160.197.175:3006/api/v1/user/login',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'email': this.state.controls.email.value,
-                'password': this.state.controls.password.value
-            })
-        }).then((response) => {
-          this.setState({isProgress: false})
-            if (response != undefined && response.status == 200) {
-                return response.json()
-            } else {
-                Alert.alert('FoodApp', 'User not found', [
-                  {
-                      text: 'Ok',
-                      style: 'cancel'
-                  },
-                  ])
-              }
-
-        }).then((responseJSON) => {
-            if (responseJSON != undefined) {
-            const {token} = responseJSON
-            this.saveAccessToken(token);
-            constants.isLoggedIn = true;
-            this.props.navigation.navigate('Home');
-            }
-        }).catch((error) => {
-            console.log(error);
-            this.setState({isLoading: false})
+  onLogin = async () => {
+    this.setState({ isProgress: true })
+    await ApiManager.login(this.state.controls.email.value.trim(), this.state.controls.password.value.trim()).then((response) => {
+      this.setState({ isProgress: false })
+      if (response != undefined && response.status == 200) {
+        return response.json()
+      }
+      else {
+        const { error } = responseJSON
+        Alert.alert('FoodApp', error, [
+          {
+            text: 'Ok',
+            style: 'cancel'
+          },
+        ])
+      }
+    }).then((responseJSON) => {
+      if (responseJSON != undefined) {
+        const { token } = responseJSON
+        this.saveAccessToken(token);
+        constants.isLoggedIn = true;
+        const resetAction = StackActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({ routeName: 'Main' })
+          ]
         })
-}
-
-
+        this.props.navigation.dispatch(resetAction)
+      }
+    });
+  }
   saveAccessToken = async token => {
     try {
 
-      await AsyncStorage.setItem('accesstoken', token);
+      AsyncStorage.setItem('accesstoken', token);
     } catch (error) {
       // Error retrieving data
       console.log(error.message);
@@ -167,15 +151,6 @@ export default class LoginComponent extends Component {
       };
     });
   }
+
 }
 
-const styles = StyleSheet.create({
-
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-});

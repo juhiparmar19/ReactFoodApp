@@ -1,9 +1,9 @@
-import apiconfig from "../ApiService/Api";
+import Apiconfig from "../ApiService/Api";
 
 export default{
     async getCookingList(token)  {
         try {
-            const res = await fetch(apiconfig.Base_url + apiconfig.CookingListApi, {
+            const res = await fetch(Apiconfig.Base_url + Apiconfig.CookingListApi, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -17,7 +17,7 @@ export default{
     },
     async login(email,password)  {
         try {
-          fetch('http://35.160.197.175:3006/api/v1/user/login', {
+            const res = await fetch(Apiconfig.Base_url + Apiconfig.LoginApi, {
                 method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
@@ -26,9 +26,8 @@ export default{
                           'email':email,
                           'password':password
                         })
-         }).then((response) => {
-            return response.json();
-         });
+         })
+            return res;
         } catch(e) {
          console.log(e)
        }
