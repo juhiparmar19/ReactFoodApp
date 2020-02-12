@@ -10,7 +10,7 @@ export default{
                 'Authorization':'Bearer ' +token
             },
          });
-           return await res.json();
+           return res;
         } catch(e) {
          console.log(e)
        }

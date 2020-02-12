@@ -16,13 +16,13 @@ import SplashScreen from 'react-native-splash-screen';
 import AppNavigator from '../FoodApp/AppNavigator'
 
 const App: () => React$Node = () => {
-  useEffect(()=>{
-SplashScreen.hide();
-  },[]);
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
   return (
     <>
-{Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
-    <AppNavigator/>
+      {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
+      <AppNavigator />
     </>
   );
 };

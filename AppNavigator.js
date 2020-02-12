@@ -1,8 +1,8 @@
 import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer,createSwitchNavigator } from 'react-navigation';
 import Login from '../FoodApp/components/LoginComponent';
 import Home from '../FoodApp/components/HomeComponent';
-import Splash from '../FoodApp/components/SplashComponent';
+import Auth from '../FoodApp/components/AuthComponent';
 
 const AuthStack = createStackNavigator(
   {
@@ -23,26 +23,33 @@ const HomeStack = createStackNavigator(
 
 )
 
-const RootStack = createStackNavigator(
+// const RootStack = createStackNavigator(
+//   {
+      
+//     Main: {
+//       screen: HomeStack
+//     },
+
+//   },
+//   {
+//     mode: 'modal',
+//     headerMode: 'none',
+//     initialRouteName:'Main'
+//   }
+// )
+
+const SwitchNavigator = createSwitchNavigator(
   {
-    Splash:{
-      screen : Splash
-    },
-
-    Auth: {
-      screen: AuthStack,
-    },
-    Main: {
-      screen: HomeStack
-    },
-    
-
+    AuthDecider :Auth,
+    Auth: AuthStack,
+    Main: HomeStack
   },
   {
     mode: 'modal',
     headerMode: 'none',
-    initialRouteName: 'Splash' 
+    initialRouteName: 'AuthDecider'
   }
 )
-const AppNavigator = createAppContainer(RootStack);
+
+const AppNavigator = createAppContainer(SwitchNavigator);
 export default AppNavigator;

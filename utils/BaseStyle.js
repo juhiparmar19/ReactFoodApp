@@ -108,7 +108,6 @@ const baseStyles = StyleSheet.create({
     justifyContent: 'center',
     color: 'black',
     fontSize: dimen.fontNormal,
-    flex: 1,
     minHeight: 40,
   },
   buttonDisableStyle: {

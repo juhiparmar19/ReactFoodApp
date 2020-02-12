@@ -11,10 +11,10 @@ import { StackActions, NavigationActions } from 'react-navigation'
 export default class LoginComponent extends Component {
   constructor(props) {
     super(props);
-    const token = AsyncStorage.getItem('accesstoken');
-
+   
     this.state = {
       profile: "",
+      token :"",
       isProgress: false,
       controls: {
         email: {
@@ -35,11 +35,20 @@ export default class LoginComponent extends Component {
         },
       },
     }
+    AsyncStorage.getItem('accesstoken').then(accesstoken => {
+      console.log("token===",accesstoken);
+      if (accesstoken != null && accesstoken != "") {
+        this.setState({token:accesstoken})
+        this.props.navigation.navigate('Main')
+      }
+    });
+
 
   }
   render() {
+    if(this.state.accesstoken=="" || this.state.accesstoken == null)
+      {
     return (
-
 
       <SafeAreaView style={BaseStyle.container}>
         <LoadingComponent isLoading={this.state.isProgress} />
@@ -63,14 +72,13 @@ export default class LoginComponent extends Component {
           placeholder='Password' ></TextInput>
         <TouchableOpacity
           style={BaseStyle.horizontalView}
-          activeOpacity ={0.5}
+          activeOpacity={0.5}
           onPress={this.onLogin}
           disabled={
             !this.state.controls.email.valid ||
             !this.state.controls.password.valid
           } >
           <Text
-
             style={
               (!this.state.controls.email.valid || !this.state.controls.password.valid)
                 ? { ...BaseStyle.buttonStyle, ...BaseStyle.buttonDisableStyle }
@@ -81,6 +89,10 @@ export default class LoginComponent extends Component {
       </SafeAreaView>
 
     );
+  }
+  else{
+    return null
+  }
   }
   onLogin = async () => {
     this.setState({ isProgress: true })
@@ -103,13 +115,15 @@ export default class LoginComponent extends Component {
         const { token } = responseJSON
         this.saveAccessToken(token);
         constants.isLoggedIn = true;
-        const resetAction = StackActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({ routeName: 'Main' })
-          ]
-        })
-        this.props.navigation.dispatch(resetAction)
+        this.props.navigation.navigate('Main')
+
+        // const resetAction = StackActions.reset({
+        //   index: 0,
+        //   actions: [
+        //     NavigationActions.navigate({ routeName: 'Main' })
+        //   ]
+        // })
+        // this.props.navigation.dispatch(resetAction)
       }
     });
   }

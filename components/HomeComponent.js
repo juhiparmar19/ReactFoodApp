@@ -1,6 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, AsyncStorage, alert } from 'react-native';
-import ApiManager from '../ApiService/ApiManager'
+import { StyleSheet, View, Text, Alert, FlatList, TouchableOpacity, Image } from 'react-native';
+import ApiManager from '../ApiService/ApiManager';
+import AsyncStorage from '@react-native-community/async-storage';
+import FlatListItemSeparator from './FlatData/FlatListItemSeparator';
+import FlatListHeader from './FlatData/FlatListHeader';
+import ReceipeItem from '../components/ReceipeItem';
+import NoDataComponent from '../components/NoDataComponent';
+import LoadingComponent from "./LoadingComponent";
 
 export default class HomeComponent extends Component {
   constructor(props) {
@@ -9,41 +15,82 @@ export default class HomeComponent extends Component {
     this.state = {
       loading: true,
       recipeList: []
-
     }
   }
-
   componentDidMount() {
-    this.state.recipeList = async () => {
-      await AsyncStorage.getItem('accesstoken').then((token) => {
-        ApiManager.getCookingList(token).then((res) => {
-          if (res.status == 200) {
-            this.setState({ loading: false })
-            return res
-          } else {
-            alert("error:  " + res.error);
-          }
-        })
-      })
-    }
+    this.getListData();
   }
 
-
+  getListData() {
+    AsyncStorage.getItem('accesstoken').then((token) => {
+      ApiManager.getCookingList(token).then((res) => {
+        return res.json();
+        }).then((responseJson) => {
+             const { error } = responseJson
+              if (error != undefined) {
+                Alert.alert('FoodApp', "data", [
+                 {
+                   text: 'Ok',
+                   style: 'cancel'
+                 },
+                ])
+              } else {
+                if (responseJson != undefined) {
+                this.setState({ recipeList: responseJson })
+                }
+              }
+        this.setState({ loading: false })
+      });
+    })
+  }
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>We have sooooo many friends!</Text>
-      </View>
-    );
+    if (this.state.loading) {
+      return <LoadingComponent isLoading={this.state.loading} />
+    }
+    else {
+      <LoadingComponent isLoading={this.state.loading} />
+      if (this.state.recipeList.length > 0) {
+        return (
+          <View>
+            <FlatList
+              data={this.state.recipeList}
+              ItemSeparatorComponent={FlatListItemSeparator}
+              keyExtractor={(item, recipeId) => recipeId.toString()}
+              renderItem={({ item }) => <ReceipeItem Item={item} />}
+            />
+          </View>
+        )
+      } else {
+        return (
+          <NoDataComponent msg="No Receipes found" />
+        );
+      }
+    }
+
   }
 }
-const styles = StyleSheet.create({
 
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-
+  dataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
 });
