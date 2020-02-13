@@ -9,7 +9,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import bookmarkIcon from '../assets/ic_splash_app.png';
 import readIcon from '../assets/ic_splash_app.png';
-import styles from '../utils/BaseStyle';
+import styles from '../../utils/BaseStyle';
 
 const saveArticle = async (key, value) =>{
     try {

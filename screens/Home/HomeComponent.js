@@ -1,27 +1,24 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Alert, FlatList, TouchableOpacity, Image } from 'react-native';
-import ApiManager from '../ApiService/ApiManager';
+import ApiManager from '../../service/ApiManager';
 import AsyncStorage from '@react-native-community/async-storage';
-import FlatListItemSeparator from './FlatData/FlatListItemSeparator';
-import FlatListHeader from './FlatData/FlatListHeader';
-import ReceipeItem from '../components/ReceipeItem';
-import NoDataComponent from '../components/NoDataComponent';
-import LoadingComponent from "./LoadingComponent";
+import FlatListItemSeparator from '../FlatData/FlatListItemSeparator';
+import FlatListHeader from '../FlatData/FlatListHeader';
+import ReceipeItem from '../Receipe/ReceipeItem';
+import NoDataComponent from '../../common/NoDataComponent';
+import LoadingComponent from "../../common/LoadingComponent";
 
 export default class HomeComponent extends Component {
+ 
   constructor(props) {
     super(props)
-    this.props.navigation.pop('Login');
     this.state = {
       loading: true,
       recipeList: []
     }
-  }
-  componentDidMount() {
     this.getListData();
   }
-
-  getListData() {
+   getListData() {
     AsyncStorage.getItem('accesstoken').then((token) => {
       ApiManager.getCookingList(token).then((res) => {
         return res.json();

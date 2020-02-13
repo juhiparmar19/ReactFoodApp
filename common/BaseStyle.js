@@ -123,6 +123,17 @@ const baseStyles = StyleSheet.create({
     width:"80%",
     padding:10
   },
+ 
+heading: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+},
+menuItem:{
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: '#d6d7da'
+}
 })
 
 export default baseStyles;

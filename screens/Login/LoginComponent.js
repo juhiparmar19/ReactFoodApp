@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Text, TextInput, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native';
-import BaseStyle from '../utils/BaseStyle'
-import validationInput from '../utils/validation'
-import ApiManager from '../ApiService/ApiManager';
-import constants from "../config/constants";
+import BaseStyle from '../../common/BaseStyle'
+import validationInput from '../../utils/validation'
+import ApiManager from '../../service/ApiManager';
+import constants from "../../config/constants";
 import AsyncStorage from '@react-native-community/async-storage'
-import LoadingComponent from "./LoadingComponent";
+import LoadingComponent from "../../common/LoadingComponent";
 import { StackActions, NavigationActions } from 'react-navigation'
+import AppNavigator from '../../AppNavigator'
 
 export default class LoginComponent extends Component {
   constructor(props) {
@@ -36,10 +37,9 @@ export default class LoginComponent extends Component {
       },
     }
     AsyncStorage.getItem('accesstoken').then(accesstoken => {
-      console.log("token===",accesstoken);
       if (accesstoken != null && accesstoken != "") {
         this.setState({token:accesstoken})
-        this.props.navigation.navigate('Main')
+       // this.props.navigation.navigate('Main')
       }
     });
 
@@ -115,7 +115,8 @@ export default class LoginComponent extends Component {
         const { token } = responseJSON
         this.saveAccessToken(token);
         constants.isLoggedIn = true;
-        this.props.navigation.navigate('Main')
+        <AppNavigator/>
+       // this.props.navigation.navigate('Main')
 
         // const resetAction = StackActions.reset({
         //   index: 0,

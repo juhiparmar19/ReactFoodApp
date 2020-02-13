@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, Component } from 'react';
 import {
   StatusBar,
   Platform,
@@ -14,17 +14,22 @@ import {
 
 import SplashScreen from 'react-native-splash-screen';
 import AppNavigator from '../FoodApp/AppNavigator'
+import AuthNavigator from '../FoodApp/AuthNavigator'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const App: () => React$Node = () => {
+
   useEffect(() => {
     SplashScreen.hide();
   }, []);
   return (
-    <>
+        <>
       {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
-      <AppNavigator />
+        <AppNavigator />
+  
     </>
   );
 };
+
 
 export default App;
