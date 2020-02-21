@@ -1,14 +1,107 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { StyleSheet, View, Text, Alert, SectionList, SafeAreaView, FlatList } from 'react-native';
+import ApiManager from '../../service/ApiManager';
+import AsyncStorage from '@react-native-community/async-storage';
+import LoadingComponent from "../../common/LoadingComponent";
+import ReceipeItem from '../Receipe/ReceipeItem';
+import NoDataComponent from '../../common/NoDataComponent';
+import FlatListItemSeparator from '../FlatData/FlatListItemSeparator';
 
-export default class ReceipeListComponent extends Component{
+export default class ReceipeListComponent extends Component {
 
-    
-    render(){
-        return(
-            <View/>
-        )
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            loading: true,
+            receipeList: [],
+            title: 'Data',
+            isFetching: false,
+
+        }
+        this.getReceipeListData();
     }
+    onRefresh() {
+        this.setState({ isFetching: true }, function() { this.getReceipeListData() });
+     }
+    getReceipeListData() {
+        AsyncStorage.getItem('accesstoken').then((token) => {
+            ApiManager.getCookingList(token).then((res) => {
+                return res.json();
+            }).then((responseJson) => {
+                const { error } = responseJson
+                console.log("data" ,responseJson)
+                if (error != undefined) {
+                    Alert.alert('FoodApp', "data", [
+                        {
+                            text: 'Ok',
+                            style: 'cancel'
+                        },
+                    ])
+                } else {
+                    if (responseJson != undefined) {
+                        this.setState({ receipeList: responseJson })
+                    }
+                }
+                this.setState({ loading: false })
+                this.setState({ isFetching: false })
+
+            });
+        })
+    }
+   
+    render() {
+        if (this.state.loading) {
+          return <LoadingComponent isLoading={this.state.loading} />
+        }
+        else {
+          <LoadingComponent isLoading={this.state.loading} />
+          if (this.state.receipeList.length > 0) {
+            return (
+              <View>
+                <FlatList
+                  data={this.state.receipeList}
+                  extraData={this.state}
+                  onRefresh={() => this.onRefresh()}
+                  refreshing={this.state.isFetching}
+                  ItemSeparatorComponent={FlatListItemSeparator}
+                  keyExtractor={(item, recipeId) => recipeId.toString()}
+                  renderItem={({ item }) => <ReceipeItem Item={item} />}
+                />
+              </View>
+            )
+          } else {
+            return (
+              <NoDataComponent msg="No Receipes found" />
+            );
+          }
+        }
     
+      }
+
 }
+function Item({ title }) {
+    return (
+        <View style={styles.item}>
+            <Text style={styles.title}>{title}</Text>
+        </View>
+    );
+}
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        marginTop: 10,
+        marginHorizontal: 16,
+    },
+    item: {
+        backgroundColor: '#f9c2ff',
+        padding: 20,
+        marginVertical: 8,
+    },
+    header: {
+        fontSize: 32,
+    },
+    title: {
+        fontSize: 24,
+    },
+});

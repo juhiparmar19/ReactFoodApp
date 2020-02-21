@@ -6,8 +6,6 @@ import ApiManager from '../../service/ApiManager';
 import constants from "../../config/constants";
 import AsyncStorage from '@react-native-community/async-storage'
 import LoadingComponent from "../../common/LoadingComponent";
-import { StackActions, NavigationActions } from 'react-navigation'
-import AppNavigator from '../../AppNavigator'
 
 export default class LoginComponent extends Component {
   constructor(props) {
@@ -81,7 +79,7 @@ export default class LoginComponent extends Component {
           <Text
             style={
               (!this.state.controls.email.valid || !this.state.controls.password.valid)
-                ? { ...BaseStyle.buttonStyle, ...BaseStyle.buttonDisableStyle }
+                ? {...BaseStyle.buttonDisableStyle }
                 : BaseStyle.buttonStyle
             }
           >Login</Text>
@@ -90,7 +88,7 @@ export default class LoginComponent extends Component {
 
     );
   }
-  else{
+  else{ 
     return null
   }
   }
@@ -102,7 +100,7 @@ export default class LoginComponent extends Component {
         return response.json()
       }
       else {
-        const { error } = responseJSON
+        const { error } = response
         Alert.alert('FoodApp', error, [
           {
             text: 'Ok',
@@ -115,17 +113,8 @@ export default class LoginComponent extends Component {
         const { token } = responseJSON
         this.saveAccessToken(token);
         constants.isLoggedIn = true;
-        <AppNavigator/>
-       // this.props.navigation.navigate('Main')
-
-        // const resetAction = StackActions.reset({
-        //   index: 0,
-        //   actions: [
-        //     NavigationActions.navigate({ routeName: 'Main' })
-        //   ]
-        // })
-        // this.props.navigation.dispatch(resetAction)
-      }
+        this.props.navigation.navigate('Main')
+            }
     });
   }
   saveAccessToken = async token => {

@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation';
 import PropTypes from 'prop-types';
 import {ScrollView, Text, View} from 'react-native';
-import { DrawerActions } from 'react-navigation';
+import { DrawerActions } from 'react-navigation-drawer';
 import styles from '../../common/BaseStyle';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class DrawerScreen extends Component {
   navigateToScreen = (route) => () => {
@@ -20,18 +21,18 @@ class DrawerScreen extends Component {
         <ScrollView>
           <View>
             <View style={styles.menuItem}>
-              <Text onPress={this.navigateToScreen('Home')}>
+              <Text style={{fontSize: 15, color :'#7183c7'}} onPress={this.navigateToScreen('Home')}>
                 Home
               </Text>
             </View>
             <View style={styles.menuItem}>
-              <Text onPress={this.navigateToScreen('My Receipe')}>
-               About
+              <Text style={{fontSize: 15, color :'#7183c7'}}>
+               Profile
               </Text>
             </View>
             <View style={styles.menuItem}>
-              <Text onPress={this.navigateToScreen('Add Receipe')}>
-              Contact
+              <Text style={{fontSize: 15, color :'#7183c7',fontWeight:'600'}}  onPress={this.onLogout}>
+              LogOut
               </Text>
             </View>
           </View>
@@ -39,7 +40,14 @@ class DrawerScreen extends Component {
       </View>
     );
   }
+  onLogout =()=>{
+    AsyncStorage.setItem('accessToken','');
+    this.props.navigation.navigate('Auth');
+
+  }
 }
+
+
 
 DrawerScreen.propTypes = {
   navigation: PropTypes.object

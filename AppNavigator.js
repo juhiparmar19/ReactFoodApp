@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer,createSwitchNavigator } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import LoginComponent from './screens/Login/LoginComponent';
 import HomeComponent from './screens/Home/HomeComponent';
 import AuthComponent from './screens/Navigator/AuthComponent';
@@ -8,8 +8,8 @@ import AddReceipeComponent from './screens/Receipe/AddReceipeComponent';
 import ReceipeListComponent from './screens/Receipe/ReceipeListComponent';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import DrawerScreen from './screens/Home/DrawerScreen';
-import {createDrawerNavigator,DrawerActions} from 'react-navigation-drawer'
-import {TouchableOpacity,Image} from 'react-native';
+import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer'
+import { TouchableOpacity, Image } from 'react-native';
 
 const AuthStack = createStackNavigator(
   {
@@ -25,95 +25,149 @@ const HomeStack = createStackNavigator(
       screen: HomeComponent
     },
   },
-  { 
+  {
     defaultNavigationOptions: {
       headerShown: false
     },
-    initialRouteName: 'Home' }
+    headerMode:'none',
+    initialRouteName: 'Home'
+  }
 )
-
 const MainApp = createMaterialBottomTabNavigator(
   {
-    Receipe: {screen: ReceipeListComponent},
-    Home:{screen :HomeStack}  ,
-    AddReceipe:{screen :AddReceipeComponent} ,
+    Recipes: { screen: ReceipeListComponent},
+    Home: { screen: HomeStack },
+     AddRecipe: { screen: AddReceipeComponent 
+      //, navigationOptions:{
+    //   title:'Add Recipe',
+    //   tabBarLabel:'Add Recipe',
+    
+    // //  keyboardHidesNavigationBar:true
+    // }
+  },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
+          
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
-        if (routeName === 'Home') {
-          return (
-            <Image
-              source={ require('./assets/ic_home.png') }
-              style={{ width: 20, height: 20, }} />
-          );
-        } 
-      },
+        switch (routeName) {
+          case 'Home':
+            return (
+              <Image
+                source={require('./assets/ic_home.png')}
+                style={{ width: 25, height: 25,alignItems:'center',tintColor:tintColor }} />
+            );
+          case 'Recipes':
+            return (
+              <Image
+                source={require('./assets/ic_recipe.png')}
+                style={{ width: 30, height: 30,alignItems:'center', tintColor:tintColor }} />
+            );
+          case 'AddRecipe':
+            return (
+              <Image
+                source={require('./assets/ic_add_recipe.png')}
+                style={{ width: 30, height: 30,alignItems:'center',tintColor:tintColor  }} />
+            );
+          default:
+            break;
+        }
+      }
+      
+
     }),
+
+    initialRouteName: 'Home',
+    activeColor: '#f0edf6',
+    inactiveColor: '#3e2465',
+   // keyboardHidesNavigationBar:true,
     tabBarOptions: {
-      activeTintColor: '#FF6F00',
-      inactiveTintColor: '#263238',
+      activeColor: '#f0edf6',
+      inactiveColor: '#3e2465',
+      labelStyle: {
+        fontSize: 15,
+        margin: 0,
+        padding: 0,
+      },
     },
-    initialRouteName:'Home'  
+    barStyle: { backgroundColor: '#7183c7' },
   }
 );
 
 const DrawerNavigator = createDrawerNavigator({
-  Home:{
-      screen: MainApp
+  Home: {
+    screen: MainApp
   }
-},{
-  
-  title:'Home',
+}, {
+
+  keyboardHidesNavigationBar:true,
   contentComponent: DrawerScreen,
-  DrawerActions:'closed',
-  drawerPosition:'right',
-  drawerLockMode: 'locked-closed',
+  drawerPosition: 'right',
   drawerWidth: 300
 });
-const MenuImage = ({navigation}) => {
-  if(!navigation.state.isDrawerOpen){
-      return <Image style={{marginRight:10}} source={require('./assets/menu-button.png')}/>
-  }else{
-      return <Image style={{marginRight:10}} source={require('./assets/left-arrow.png')}/>
+const MenuImage = ({ navigation }) => {
+  if (!navigation.state.isDrawerOpen) {
+    return <Image style={{ marginRight: 5, width: 27, height: 20, alignItems: 'center' }} source={require('./assets/ic_drawer.png')} />
+  } else {
+    return <Image style={{ marginRight: 5, width: 27, height: 20, alignItems: 'center' }} source={require('./assets/ic_back_arrow.png')} />
   }
 }
 const HomeStackNavigator = createStackNavigator({
 
   //important: key and screen name (i.e. DrawerNavigator) should be same while using the drawer navigator inside stack navigator.
-  DrawerNavigator:{
-      screen: DrawerNavigator
-  }
-}
-,{
-  defaultNavigationOptions: ({ navigation }) => ({
-      title: 'Feeds',  // Title to appear in status bar
-      headerRight: (
-      <TouchableOpacity onPress={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }>
-          <MenuImage style="styles.bar" navigation={navigation}/>
-      </TouchableOpacity>),
-      headerStyle: {
-          backgroundColor: '#d3d3d3',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
+  DrawerNavigator: {
+    screen: DrawerNavigator
+  }}, {
+  defaultNavigationOptions: ({ navigation }) => ({   
+    headerRight: () =>
+      <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.toggleDrawer()) }}>
+        <MenuImage style="styles.bar" navigation={navigation} />
+      </TouchableOpacity>,
+    headerRightContainerStyle: {
+      backgroundColor: '#fff',
+    },
+    headerMode:'float',
+    headerTintColor: '#000',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+      fontSize: 20
+    },
+    safeAreaInsets: { top:0 /* statusbar height */ },
+
   })
 }
 );
 const SwitchNavigator = createSwitchNavigator(
   {
-    AuthDecider :AuthComponent,
+    AuthDecider: AuthComponent,
     Auth: AuthStack,
     Main: HomeStackNavigator,
   },
   {
     mode: 'modal',
-    headerMode: 'none',
     initialRouteName: 'AuthDecider'
   }
 )
+const getCurrentRoute=(Object,index)=>{
+  const {routes} = Object
+  const {routeName} =routes[index]
+  return routeName
+}
+
+DrawerNavigator.navigationOptions = ({ navigation }) => {
+  let headerTitle = "";
+  const {routes} = navigation.state
+  const {index} = routes[ navigation.state.index]
+  const [Object] = routes
+  headerTitle = getCurrentRoute(Object,index)
+  if(headerTitle ==='AddRecipe'){
+    headerTitle = 'Add Recipe'
+  }
+  return {
+      headerTitle,
+  }
+}
+
 const AppNavigator = createAppContainer(SwitchNavigator);
 export default AppNavigator;

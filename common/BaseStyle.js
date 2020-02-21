@@ -7,19 +7,20 @@ const baseStyles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    flexDirection:'column'
   },
   verticalView: {
     alignItems: 'center',
     backgroundColor: 'white',
-    justifyContent: 'center',
-    flexDirection: 'column'
+    justifyContent: 'flex-end',
+    flexDirection: 'column',
+    margin:5
   },
   horizontalView: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent:'center',
-
   },
   buttonStyle: {
     alignItems: 'center',
@@ -32,6 +33,7 @@ const baseStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     width:"80%",
+    color:'white',
     padding:10
   },
   input: {
@@ -89,11 +91,51 @@ const baseStyles = StyleSheet.create({
     borderWidth: 3,
     borderColor: "gray"
   },
+  smallImage: {
+    width: 40,
+    height: 40,
+    margin: 10
+  },
   inputContainer: {
     width: "80%",
-    margin: dimen.marginTiny,
-    alignItems: 'center',
-
+    flex:1,
+    color:'#fff',
+    margin: dimen.marginMedium,
+    justifyContent:'flex-end',
+    alignItems:'flex-end',
+    fontSize: 20,
+    fontWeight : 'bold' ,
+    bottom:0
+  },
+  inputData: {
+    width: "80%",
+    flex:1,
+    color:'#000000',
+    justifyContent:'flex-end',
+    alignItems:'flex-end',
+    margin:5,
+    fontSize: 20,
+    fontWeight : 'bold' ,
+  },
+  inputDataNormal: {
+    color:'#000000',
+    justifyContent:'flex-end',
+    alignItems:'flex-end',
+    marginTop:5,
+    marginStart:8,
+    marginEnd:8, 
+       fontSize: 15,
+    fontWeight : 'normal' ,
+  },
+  inputDataBold: {
+    color:'#000000',
+    justifyContent:'flex-end',
+    alignItems:'flex-end',
+    marginTop:5,
+    marginStart:8,
+    marginEnd:8,
+    fontSize: 15,
+    fontWeight : 'bold' ,
   },
   buttonstyle: {
     width:'100%',
@@ -121,7 +163,8 @@ const baseStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     width:"80%",
-    padding:10
+    padding:10,
+    color:'white'
   },
  
 heading: {
@@ -133,7 +176,22 @@ menuItem:{
     padding: 10,
     borderWidth: 0.5,
     borderColor: '#d6d7da'
-}
+},
+imagebgcontainer: {
+  flex: 1,
+  height:230,
+  margin:5,
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'white'
+},
+ horizontalBottom:{
+  flexDirection: 'row',
+  alignItems: 'flex-end',
+  justifyContent:'flex-end',
+  flex:1
+ }
+
 })
 
 export default baseStyles;

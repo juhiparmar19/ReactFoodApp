@@ -14,8 +14,6 @@ import {
 
 import SplashScreen from 'react-native-splash-screen';
 import AppNavigator from '../FoodApp/AppNavigator'
-import AuthNavigator from '../FoodApp/AuthNavigator'
-import AsyncStorage from '@react-native-community/async-storage';
 
 const App: () => React$Node = () => {
 
