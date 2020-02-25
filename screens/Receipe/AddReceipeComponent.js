@@ -6,7 +6,6 @@ import { ScrollView } from "react-native-gesture-handler";
 import validationInput from '../../utils/validation';
 import colors from '../../config/colors'
 import { Button } from "react-native-paper";
-import { useIsFocused } from '@react-navigation/native';
 import ApiManager from '../../service/ApiManager';
 import AsyncStorage from '@react-native-community/async-storage';
 import LoadingComponent from "../../common/LoadingComponent";
@@ -193,20 +192,21 @@ export default class AddReceipeComponent extends Component {
             const { id } = responseJSON
             console.log("==responseJSON==", responseJSON)
             if (responseJSON != undefined) {
+                
 
                 if (this.state.ingredientList.length > 0) {
                     this.state.ingredientList.map(item => {
                         this.addIngredientsCall(id, item, token)
                     })
                 }      
-                if(this.state.recipeUri.length > 0){
-                    this.addRecipeImageCall(id,this.state.recipeUri,token)
-                }
-                if (this.state.instructionList.length > 0) {
+              if (this.state.instructionList.length > 0) {
                     this.state.instructionList.map(item => {
                         this.addInstructionCall(id, item, token)
                     })
                 } 
+                if(this.state.recipeUri.length > 0){
+                    this.addRecipeImageCall(id,this.state.recipeUri,token)
+                }
             }
         });
     }

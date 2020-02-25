@@ -10,6 +10,13 @@ const baseStyles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection:'column'
   },
+  maincontainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#d3d3d3',
+    flexDirection:'column'
+  },
   verticalView: {
     alignItems: 'center',
     backgroundColor: 'white',
@@ -99,7 +106,7 @@ const baseStyles = StyleSheet.create({
   inputContainer: {
     width: "80%",
     flex:1,
-    color:'#fff',
+    color:'#000',
     margin: dimen.marginMedium,
     justifyContent:'flex-end',
     alignItems:'flex-end',

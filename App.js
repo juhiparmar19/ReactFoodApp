@@ -14,6 +14,8 @@ import {
 
 import SplashScreen from 'react-native-splash-screen';
 import AppNavigator from '../FoodApp/AppNavigator'
+import { Provider } from 'react-redux';
+import configureStore from './redux/configureStore';
 
 const App: () => React$Node = () => {
 
@@ -21,10 +23,12 @@ const App: () => React$Node = () => {
     SplashScreen.hide();
   }, []);
   return (
-        <>
+    <>
       {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
+      <Provider store={configureStore}>
         <AppNavigator />
-  
+      </Provider>
+
     </>
   );
 };

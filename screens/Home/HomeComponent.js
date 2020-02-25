@@ -1,13 +1,14 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { StyleSheet, View, Text, Alert, FlatList, SectionList, SafeAreaView } from 'react-native';
 import ApiManager from '../../service/ApiManager';
 import AsyncStorage from '@react-native-community/async-storage';
-import FlatListHeader from '../FlatData/FlatListHeader';
 import FeedItem from './FeedItem';
 import NoDataComponent from '../../common/NoDataComponent';
 import LoadingComponent from "../../common/LoadingComponent";
+import {saveFeed} from '../../redux/actions/FeedActions'
+import { connect } from "react-redux";
 
-export default class HomeComponent extends Component {
+class HomeComponent extends PureComponent {
 
   constructor(props) {
     super(props)
@@ -15,18 +16,13 @@ export default class HomeComponent extends Component {
       loading: true,
       feedList: []
     }
+    this.viewabilityConfig = {
+      waitForInteraction: true,
+      viewAreaCoveragePercentThreshold: 95
+    }
     this.getListData();
   }
-  componentDidMount () {
-    this._onFocusListener = this.props.navigation.addListener('didFocus', (payload) => {
-     // this.getListData();
-     
-    });
-}
-componentWillUnmount(){
-    this._onFocusListener.remove()
-}
-  getListData() {
+   getListData() {
     AsyncStorage.getItem('accesstoken').then((token) => {
       ApiManager.getFeedList(token).then((res) => {
         return res.json();
@@ -43,39 +39,106 @@ componentWillUnmount(){
           if (responseJson != undefined) {
             this.setState({ feedList: responseJson })
             this.setState({ feedList: this.getSectionData() })
+
+            this.props.saveFeedData(this.state.feedList)
+
           }
         }
         this.setState({ loading: false })
       });
     })
   }
+
   render() {
     if (this.state.loading) {
       return <LoadingComponent isLoading={this.state.loading} />
     }
     else {
-      <LoadingComponent isLoading={this.state.loading} />
-      if (this.state.feedList.length > 0) {
-        return <SafeAreaView >
-          
+      <LoadingComponent isLoading={this.state.loading} ></LoadingComponent>
+      if (this.props.feedData.length > 0) {
+        return <SafeAreaView style={{ flexDirection: 'column'}}>
           <SectionList
-            sections={this.state.feedList}
+            sections={this.props.feedData}
+            extraData={this.props.feedData}
             keyExtractor={(item, index) => item + index}
-            renderItem={({ item }) => <FeedItem Item={item} />}
+            renderItem={({ item }) => <FeedItem Item={item} Navigation={this.props} updateState ={this.updateState}/>}
+            extraData={this.state}
+            removeClippedSubviews={true}
+            viewabilityConfig={this.viewabilityConfig}
             renderSectionHeader={({ section: { title } }) => (
               <View style={styles.item}>
                 <Text style={styles.title}>{title}</Text>
               </View>)}
           />
         </SafeAreaView>
-      }else{
+      } else {
         return (
           <NoDataComponent msg="No Feed added" />
         );
       }
     }
-
   }
+  updateState = (recipeItem) => {
+   const {inCookingList,recipeId} = recipeItem
+   AsyncStorage.getItem('accesstoken').then((token) => {
+    this.setState({ loading: true })
+    if(inCookingList === 1){
+      this.dislikeRecipe(recipeId,token)
+    }else{
+      this.likeRecipe(recipeId,token)
+    }
+   })
+}
+
+likeRecipe = (recipeId,token) => {
+
+    ApiManager.likeRecipe(recipeId, token).then((response) => {
+      this.setState({ loading: false })
+      if (response != undefined && response.status == 200) {
+        return response.json()
+      }
+      else {
+        const { error } = responseJSON
+        Alert.alert('FoodApp', error, [
+          {
+            text: 'Ok',
+            style: 'cancel'
+          },
+        ])
+      }
+    }).then((responseJSON) => {
+      if (responseJSON != undefined) {
+        console.log("responsejson", responseJSON)
+        this.getListData();
+
+
+      }
+    });
+
+}
+dislikeRecipe = (recipeId,token) => {
+  ApiManager.dislikeRecipe(recipeId, token).then((response) => {
+      this.setState({ loading: false })
+      if (response != undefined && response.status == 200) {
+        return response.json()
+      }
+      else {
+        const { error } = responseJSON
+        Alert.alert('FoodApp', error, [
+          {
+            text: 'Ok',
+            style: 'cancel'
+          },
+        ])
+      }
+    }).then((responseJSON) => {
+      if (responseJSON != undefined) {
+        this.getListData();
+
+      }
+    });
+  
+}
   getSectionData = () => {
     const SECTIONS = []
     const cookingData = [];
@@ -100,13 +163,6 @@ componentWillUnmount(){
   }
 
 }
-function Item({ title }) {
-  return (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -117,7 +173,7 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: '#7183c7',
     padding: 10,
-    alignItems:'center',
+    alignItems: 'center',
     marginVertical: 8,
   },
   header: {
@@ -125,7 +181,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    color:'#fff',
-    fontWeight:'bold',
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
+const mapStateToProps = (state) => {
+  return { feedData: state.rootReducer.feedList}
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    saveFeedData: (feed) => {
+      dispatch(saveFeed(feed))
+    }
+
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeComponent)

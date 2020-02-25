@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Alert, SectionList, SafeAreaView, FlatList } from 'react-native';
+import { StyleSheet, Alert,  SafeAreaView, FlatList } from 'react-native';
 import ApiManager from '../../service/ApiManager';
 import AsyncStorage from '@react-native-community/async-storage';
 import LoadingComponent from "../../common/LoadingComponent";
@@ -8,8 +8,6 @@ import NoDataComponent from '../../common/NoDataComponent';
 import FlatListItemSeparator from '../FlatData/FlatListItemSeparator';
 
 export default class ReceipeListComponent extends Component {
-
-
     constructor(props) {
         super(props)
         this.state = {
@@ -19,6 +17,10 @@ export default class ReceipeListComponent extends Component {
             isFetching: false,
 
         }
+        this.viewabilityConfig = {
+            waitForInteraction: true,
+            viewAreaCoveragePercentThreshold: 95
+          }
         this.getReceipeListData();
     }
     onRefresh() {
@@ -58,17 +60,20 @@ export default class ReceipeListComponent extends Component {
           <LoadingComponent isLoading={this.state.loading} />
           if (this.state.receipeList.length > 0) {
             return (
-              <View>
+              <SafeAreaView style={{flexDirection:'column'}}>
                 <FlatList
                   data={this.state.receipeList}
                   extraData={this.state}
                   onRefresh={() => this.onRefresh()}
                   refreshing={this.state.isFetching}
+                  initialNumToRender={10}
+                  removeClippedSubviews={true}
+                  viewabilityConfig={this.viewabilityConfig}
                   ItemSeparatorComponent={FlatListItemSeparator}
                   keyExtractor={(item, recipeId) => recipeId.toString()}
                   renderItem={({ item }) => <ReceipeItem Item={item} />}
                 />
-              </View>
+              </SafeAreaView>
             )
           } else {
             return (
@@ -80,13 +85,7 @@ export default class ReceipeListComponent extends Component {
       }
 
 }
-function Item({ title }) {
-    return (
-        <View style={styles.item}>
-            <Text style={styles.title}>{title}</Text>
-        </View>
-    );
-}
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

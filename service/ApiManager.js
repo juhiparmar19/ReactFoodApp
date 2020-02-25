@@ -160,6 +160,20 @@ export default {
       console.log(e)
     }
   },
+
+  async getRecipeDetail(token,id) {
+    try {
+      const res = await fetch(Apiconfig.Base_url + 'recipe/'+id+'/details', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+      });
+      return res;
+    } catch (e) {
+      console.log(e)
+    }
+  },
   createFormData  (imageUri,id)  {
     const data = new FormData();
     var photo = {
@@ -171,20 +185,5 @@ export default {
     data.append("recipeId", id)
     return data;
   }
-//  createFormData(photo, body) {
-//     const data = new FormData();
-  
-//     data.append("photo", {
-//       name: "photo.jpeg",
-//       type:"image.jpeg",
-//       uri:
-//         Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
-//     });
-  
-//     Object.keys(body).forEach(key => {
-//       data.append(key, body[key]);
-//     });
-  
-//     return data;
-//   },
+
 }

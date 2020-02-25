@@ -1,21 +1,21 @@
 import { AsyncStorage } from 'react-native';
-
+import Constants from '../config/constants'
 export const getData = (token) => ({
-    type: 'GET_TOKEN',
+    type:Constants.GET_TOKEN,
     token,
 });
 
 export const saveData = token => ({
-    type: 'SAVE_TOKEN',
+    type: Constants.SAVE_TOKEN,
     token
 });
 
 export const removeData = () => ({
-    type: 'REMOVE_TOKEN',
+    type: Constants.REMOVE_TOKEN,
 });
 
 export const loading = bool => ({
-    type: 'LOADING',
+    type: Constants.LOADING,
     isLoading: bool,
 });
 

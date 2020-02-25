@@ -1,7 +1,14 @@
 
 const constants = {
    name: "FoodApp",
-   isLoggedIn: false
-
+   isLoggedIn: false,
+   GET_TOKEN : "GET_TOKEN",
+   SAVE_TOKEN:'SAVE_TOKEN',
+   REMOVE_TOKEN :'REMOVE_TOKEN',
+   SAVE_FEED :'SAVE_FEED',
+   UPDATE_FEED :'UPDATE_FEED',
+   RESET :'RESET',
+   SAVE_USER:'SAVE_USER',
+   LOADING:'LOADING'
 }
 export default constants;

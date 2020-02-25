@@ -26,7 +26,7 @@ class DrawerScreen extends Component {
               </Text>
             </View>
             <View style={styles.menuItem}>
-              <Text style={{fontSize: 15, color :'#7183c7'}}>
+              <Text style={{fontSize: 15, color :'#7183c7'}} onPress={this.navigateToScreen('Profile')}>
                Profile
               </Text>
             </View>
