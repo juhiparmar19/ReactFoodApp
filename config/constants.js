@@ -9,6 +9,7 @@ const constants = {
    UPDATE_FEED :'UPDATE_FEED',
    RESET :'RESET',
    SAVE_USER:'SAVE_USER',
+   SAVE_PROFILE_IMAGE:'SAVE_PROFILE_IMAGE',
    LOADING:'LOADING'
 }
-export default constants;
+export default constants;  

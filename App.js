@@ -15,7 +15,7 @@ import {
 import SplashScreen from 'react-native-splash-screen';
 import AppNavigator from '../FoodApp/AppNavigator'
 import { Provider } from 'react-redux';
-import configureStore from './redux/configureStore';
+import configureStore from './redux/ConfigureStore';
 
 const App: () => React$Node = () => {
 

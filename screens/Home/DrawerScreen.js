@@ -5,6 +5,8 @@ import {ScrollView, Text, View} from 'react-native';
 import { DrawerActions } from 'react-navigation-drawer';
 import styles from '../../common/BaseStyle';
 import AsyncStorage from '@react-native-community/async-storage';
+import {reset} from '../../redux/actions/Useractions'
+import { connect } from "react-redux";
 
 class DrawerScreen extends Component {
   navigateToScreen = (route) => () => {
@@ -42,15 +44,24 @@ class DrawerScreen extends Component {
   }
   onLogout =()=>{
     AsyncStorage.setItem('accessToken','');
+    AsyncStorage.setItem('user','');
+    this.props.logout()
+
     this.props.navigation.navigate('Auth');
 
   }
 }
 
-
-
 DrawerScreen.propTypes = {
   navigation: PropTypes.object
 };
 
-export default DrawerScreen;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logout() {
+      dispatch(reset())
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(DrawerScreen)

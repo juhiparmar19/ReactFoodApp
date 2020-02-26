@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { DrawerActions } from 'react-navigation-drawer';
-import ApiManager from '../../service/ApiManager';
-import AsyncStorage from '@react-native-community/async-storage';
 import {
   View,
   Text,
@@ -11,14 +9,15 @@ import {
 } from 'react-native';
 import styles from '../../common/BaseStyle';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import SkeletonContent from "react-native-skeleton-content-nonexpo";
+import { connect } from "react-redux";
 
-export default class FeedItem extends Component {
+class FeedItem extends Component {
   constructor(props) {
     super(props)
     const { Item, Navigation } = props
     this.state = {
       feedItem: Item,
-      loading: false,
     }
 
   }
@@ -30,7 +29,17 @@ export default class FeedItem extends Component {
   FeedData = (Item) => {
     const { name, inCookingList, photo, recipeId } = Item;
     return (
+      <SkeletonContent
+    containerStyle={{flex: 1, width: 300}}
+    isLoading={false}
+    layout={[
+    { key:"someId", width: 220, height: 20, marginBottom: 6 },
+    { key: "someOtherId", width: 180, height: 20, marginBottom: 6 },
+    ]}
+    >
+
       <TouchableOpacity style={styles.maincontainer}>
+
         <View style={styles.verticalView}>
           <TouchableOpacity
           style={{flexDirection:"row"}}
@@ -61,6 +70,14 @@ export default class FeedItem extends Component {
 
         </View>
       </TouchableOpacity>
+      </SkeletonContent>
     )
   }
 };
+const mapStateToProps = (state) => {
+  return { isLoading: state.rootReducer.isLoading}
+}
+
+
+
+export default connect(mapStateToProps)(FeedItem)

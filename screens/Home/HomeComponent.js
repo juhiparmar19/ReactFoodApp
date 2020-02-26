@@ -6,7 +6,9 @@ import FeedItem from './FeedItem';
 import NoDataComponent from '../../common/NoDataComponent';
 import LoadingComponent from "../../common/LoadingComponent";
 import {saveFeed} from '../../redux/actions/FeedActions'
+import {loading} from '../../redux/actions/Useractions'
 import { connect } from "react-redux";
+import SkeletonLoader from 'react-native-skeleton-loader';
 
 class HomeComponent extends PureComponent {
 
@@ -24,6 +26,7 @@ class HomeComponent extends PureComponent {
   }
    getListData() {
     AsyncStorage.getItem('accesstoken').then((token) => {
+      this.props.setLoader(true)
       ApiManager.getFeedList(token).then((res) => {
         return res.json();
       }).then((responseJson) => {
@@ -44,7 +47,7 @@ class HomeComponent extends PureComponent {
 
           }
         }
-        this.setState({ loading: false })
+        this.props.setLoader(false)
       });
     })
   }
@@ -54,7 +57,7 @@ class HomeComponent extends PureComponent {
       return <LoadingComponent isLoading={this.state.loading} />
     }
     else {
-      <LoadingComponent isLoading={this.state.loading} ></LoadingComponent>
+    <LoadingComponent isLoading={this.state.loading} ></LoadingComponent>
       if (this.props.feedData.length > 0) {
         return <SafeAreaView style={{ flexDirection: 'column'}}>
           <SectionList
@@ -193,8 +196,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     saveFeedData: (feed) => {
       dispatch(saveFeed(feed))
+    },
+    setLoader:(bool)=>{
+      dispatch(loading(bool))
     }
-
   }
 }
 

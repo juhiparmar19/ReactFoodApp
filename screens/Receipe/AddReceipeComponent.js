@@ -10,9 +10,9 @@ import ApiManager from '../../service/ApiManager';
 import AsyncStorage from '@react-native-community/async-storage';
 import LoadingComponent from "../../common/LoadingComponent";
 import ImagePicker from 'react-native-image-picker'
-import Permissions from 'react-native-permissions'
-
-export default class AddReceipeComponent extends Component {
+import {saveFeed} from '../../redux/actions/FeedActions'
+import { connect } from "react-redux"; 
+class AddReceipeComponent extends Component {
 
     ingredientArray = [];
     instructionArray = [];
@@ -21,6 +21,7 @@ export default class AddReceipeComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            feedList: [],
             ingredient: '',
             controls: {
                 name: {
@@ -192,7 +193,7 @@ export default class AddReceipeComponent extends Component {
             const { id } = responseJSON
             console.log("==responseJSON==", responseJSON)
             if (responseJSON != undefined) {
-                
+                this.getListData()
 
                 if (this.state.ingredientList.length > 0) {
                     this.state.ingredientList.map(item => {
@@ -521,36 +522,66 @@ export default class AddReceipeComponent extends Component {
               path: 'images',
             },
           };
-          
-          /**
-       * The first arg is the options object for customization (it can also be null or omitted for default options),
-       * The second arg is the callback which sends object: response (more info in the API Reference)
-       */
+    
       ImagePicker.showImagePicker(options, (response) => {
              if (response.didCancel) {
         } else if (response.error) {
         }else {
-          const source = { uri: response.uri };
-      
-          // You can also display the image using data:
-          // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-      
+  
           this.setState({
            recipePath: response,
            recipeData: response.data,
            recipeUri: response.uri
           });
-        //   AsyncStorage.getItem('accesstoken').then((token) => {
-        //     if (token != undefined) {
-        //         this.addRecipeImageCall(795,response.uri,token)
-        //     }
-        // })
-
+    
 
         }
       });
       }
-     
+      getListData(token) {
+          ApiManager.getFeedList(token).then((res) => {
+            return res.json();
+          }).then((responseJson) => {
+            const { error } = responseJson
+            if (error != undefined) {
+              Alert.alert('FoodApp', "data", [
+                {
+                  text: 'Ok',
+                  style: 'cancel'
+                },
+              ])
+            } else {
+              if (responseJson != undefined) {
+                 this.props.saveFeedData(this.getSectionData(responseJson) )
+             }
+            }
+            this.setState({ loading: false })
+          });
+      }
+      getSectionData = (responseFeed) => {
+        const SECTIONS = []
+        const cookingData = [];
+        const foodData = [];
+        for (const item in responseFeed) {
+          if (responseFeed[item].inCookingList === 1) {
+            cookingData.push(responseFeed[item])
+          } else {
+            foodData.push(responseFeed[item])
+          }
+        }
+        SECTIONS.push({
+          title: "Favourite Recipe",
+          data: cookingData
+    
+        })
+        SECTIONS.push({
+          title: "New Recipe",
+          data: foodData
+        })
+        return SECTIONS;
+      
+    
+    }
 }
 
 
@@ -561,3 +592,13 @@ const baseStyles = StyleSheet.create({
         flexDirection: 'column',
     },
 })
+const mapDispatchToProps = (dispatch) => {
+    return {
+      saveFeedData: (feed) => {
+        dispatch(saveFeed(feed))
+      }
+    }
+  }
+  
+export default connect(null, mapDispatchToProps)(AddReceipeComponent)
+  

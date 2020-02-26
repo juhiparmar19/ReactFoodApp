@@ -91,11 +91,13 @@ const baseStyles = StyleSheet.create({
     elevation: 3
   },
   roundedImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 50 / 2,
+    width: 150,
+    height: 150,
+    borderRadius: 150 / 2,
     overflow: "hidden",
-    borderWidth: 3,
+    justifyContent:'center',
+    alignItems:'center',
+    borderWidth: 2,
     borderColor: "gray"
   },
   smallImage: {

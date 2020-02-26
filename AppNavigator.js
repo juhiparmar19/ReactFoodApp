@@ -8,7 +8,6 @@ import AddReceipeComponent from './screens/Receipe/AddReceipeComponent';
 import ReceipeListComponent from './screens/Receipe/ReceipeListComponent';
 import RecipeDetailComponent from './screens/Receipe/RecipeDetailComponent';
 import ProfileComponent from './screens/Profile/ProfileComponent';
-
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import DrawerScreen from './screens/Home/DrawerScreen';
 import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer'
@@ -21,14 +20,21 @@ const AuthStack = createStackNavigator(
       screen: LoginComponent
     },
   },
-  { initialRouteName: 'Login' }
+  { 
+    defaultNavigationOptions: ({ navigation }) => ({
+      safeAreaInsets: { top: 0 /* statusbar height */ },
+
+    }),
+    initialRouteName: 'Login' 
+  
+  }
 )
 const HomeStack = createStackNavigator(
   {
     Home: {
       screen: HomeComponent
     }
-    },
+  },
   {
     defaultNavigationOptions: {
       headerShown: false
@@ -44,18 +50,18 @@ const RecipeDetailStack = createStackNavigator(
 
     RecipeDetail: {
       screen: RecipeDetailComponent,
-      navigationOptions:{
-        title :'Recipe Detail',
+      navigationOptions: {
+        title: 'Recipe Detail',
 
       }
     }
   },
   {
     defaultNavigationOptions: {
-      title :'Recipe Detail',
+      title: 'Recipe Detail',
       headerShown: false,
-    
-        headerRight: () =><View></View>
+
+      headerRight: () => <View></View>
 
     },
     headerMode: 'none',
@@ -131,7 +137,7 @@ const DrawerNavigator = createDrawerNavigator({
   Home: {
     screen: MainApp
   },
- 
+
 
 }, {
 
@@ -152,34 +158,34 @@ const HomeStackNavigator = createStackNavigator({
   //important: key and screen name (i.e. DrawerNavigator) should be same while using the drawer navigator inside stack navigator.
   DrawerNavigator: {
     screen: DrawerNavigator,
-    
+
   },
-  RecipeDetail:{
-    screen:RecipeDetailStack
+  RecipeDetail: {
+    screen: RecipeDetailStack
   },
-  Profile:{
-    screen:ProfileComponent
+  Profile: {
+    screen: ProfileComponent
   }
 }, {
   defaultNavigationOptions: ({ navigation }) => (
     {
-    headerRight: () => 
-      navigation.state.routeName == 'DrawerNavigator' ? <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.toggleDrawer()) }}>
-        <MenuImage style="styles.bar" navigation={navigation} />
-      </TouchableOpacity> : null,
-   
-    headerRightContainerStyle: {
-      backgroundColor: '#fff',
-    },
-    headerMode: 'float',
-    headerTintColor: '#000',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-      fontSize: 20
-    },
-    safeAreaInsets: { top: 0 /* statusbar height */ },
+      headerRight: () =>
+        navigation.state.routeName == 'DrawerNavigator' ? <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.toggleDrawer()) }}>
+          <MenuImage style="styles.bar" navigation={navigation} />
+        </TouchableOpacity> : null,
 
-  })
+      headerRightContainerStyle: {
+        backgroundColor: '#fff',
+      },
+      headerMode: 'float',
+      headerTintColor: '#000',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+        fontSize: 20
+      },
+      safeAreaInsets: { top: 0 /* statusbar height */ },
+
+    })
 }
 );
 const SwitchNavigator = createSwitchNavigator(
@@ -189,7 +195,11 @@ const SwitchNavigator = createSwitchNavigator(
     Main: HomeStackNavigator,
   },
   {
-    mode: 'modal',
+    defaultNavigationOptions: ({ navigation }) => ({
+      safeAreaInsets: { top: 0 /* statusbar height */ },
+
+    }
+    ),
     initialRouteName: 'AuthDecider'
   }
 )

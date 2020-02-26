@@ -37,7 +37,6 @@ export default class LoginComponent extends Component {
     AsyncStorage.getItem('accesstoken').then(accesstoken => {
       if (accesstoken != null && accesstoken != "") {
         this.setState({token:accesstoken})
-       // this.props.navigation.navigate('Main')
       }
     });
 
@@ -57,6 +56,8 @@ export default class LoginComponent extends Component {
         <TextInput style={BaseStyle.input}
           onChangeText={val => this.validateUserInput("email", val)}
           value={this.state.controls.email.value}
+          onSubmitEditing={() => this.Password.focus()}
+          returnKeyType={'next'}
           touched={this.state.controls.email.touched}
           autoCorrect={false}
           placeholder='Email'
@@ -66,6 +67,7 @@ export default class LoginComponent extends Component {
           onChangeText={val => this.validateUserInput("password", val)}
           value={this.state.controls.password.value}
           touched={this.state.controls.password.touched}
+          ref={ref => this.Password = ref}
           secureTextEntry={true}
           placeholder='Password' ></TextInput>
         <TouchableOpacity
@@ -111,6 +113,7 @@ export default class LoginComponent extends Component {
     }).then((responseJSON) => {
       if (responseJSON != undefined) {
         const { token } = responseJSON
+        this.saveUserProfile(responseJSON)
         this.saveAccessToken(token);
         constants.isLoggedIn = true;
         this.props.navigation.navigate('Main')
@@ -122,7 +125,13 @@ export default class LoginComponent extends Component {
 
       AsyncStorage.setItem('accesstoken', token);
     } catch (error) {
-      // Error retrieving data
+      console.log(error.message);
+    }
+  };
+  saveUserProfile = async user => {
+    try {
+      AsyncStorage.setItem('user',JSON.stringify(user) );
+    } catch (error) {
       console.log(error.message);
     }
   };
@@ -155,6 +164,5 @@ export default class LoginComponent extends Component {
       };
     });
   }
-
 }
 
